@@ -140,7 +140,6 @@ namespace MyHome.Controllers
         {
             var device = new DeviceViewModel() { AddressId = addressId, AddressName = friendlyName };
             ViewBag.AddressName = friendlyName;
-            ViewBag.Error = "";
             return View(device);
         }
 
@@ -150,6 +149,7 @@ namespace MyHome.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateDevice(DeviceViewModel device)
         {
+            // todo check user rights to address
             if (ModelState.IsValid)
             {
                 // check uniqueness
@@ -187,6 +187,36 @@ namespace MyHome.Controllers
             }
         }
 
+        public ActionResult DeleteDevice(string deviceId)
+        {
+            if (deviceId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Device device = db.DeviceSet.Find(deviceId);
+            if (device == null)
+            {
+                return HttpNotFound();
+            }
+            return View(AutoMapper.Mapper.Map<DeviceViewModel>(device));
+        }
+
+        [HttpPost, ActionName("DeleteDevice")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteDeviceConfirmed(string deviceId)
+        {
+            // todo - check user rights to the device
+            Device device = db.DeviceSet.Find(deviceId);
+            if (device != null)
+            {
+                string addressId = device.DeviceAddress.AddressId;
+                db.DeviceSet.Remove(device);
+                db.SaveChanges();
+                return RedirectToAction("Details", new {id = addressId });
+            }
+            else
+                return HttpNotFound();
+        }
 
         #endregion
     }

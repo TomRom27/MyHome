@@ -37,7 +37,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edycja", "EditDevice", new { id = device.DeviceId }) |
-                @Html.ActionLink("Usuń", "DeleteDevice", new { id = device.DeviceId }) |
+                @Html.ActionLink("Usuń", "DeleteDevice", new { deviceId = device.DeviceId }) |
                 @Html.ActionLink(device.ActionState.ToString(), "SwitchDevice", new { id = device.DeviceId })
             </td>
         </tr>

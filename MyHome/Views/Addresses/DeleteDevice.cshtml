@@ -1,0 +1,51 @@
+﻿@model MyHome.Models.DeviceViewModel
+
+@{
+    ViewBag.Title = "DeleteDevice";
+}
+
+<h2>Usuwanie urządzenia</h2>
+
+<h3>@Model.DeviceId</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DeviceId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeviceId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActionState)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActionState)
+        </dd>
+
+        <dt>
+            @Html.DisplayFor(model => model.SensorType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SensorType)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Usuń" class="btn btn-default" />
+
+        </div>
+    }
+    <div>
+        @Html.ActionLink("Powrót do listy urządzeń", "Details", new { id = Model.AddressId })
+    </div>
+</div>
