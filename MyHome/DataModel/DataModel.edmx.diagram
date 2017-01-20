@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="93265d44dc9744a7861acaa16c973136" Name="Diagram1" >
+        <EntityTypeShape EntityType="DataModel.Address" Width="1.5" PointX="5.125" PointY="0.5" />
+        <EntityTypeShape EntityType="DataModel.Readout" Width="1.5" PointX="2.5" PointY="2.625" />
+        <EntityTypeShape EntityType="DataModel.Device" Width="1.5" PointX="5.125" PointY="2.625" />
+        <AssociationConnector Association="DataModel.DeviceAddress" />
+        <AssociationConnector Association="DataModel.DeviceReadout" />
+        <EntityTypeShape EntityType="DataModel.OwnerGroup" Width="1.5" PointX="7.875" PointY="0.5" />
+        <AssociationConnector Association="DataModel.OwnerGroupAddress" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,49 @@
+﻿@model MyHome.Models.AddressViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Urządzenia</h2>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.FriendlyName)</h4>
+    <hr />
+</div>
+<p>
+    @Html.ActionLink("Dodaj nowy", "CreateDevice", new { Model.AddressId, Model.FriendlyName})
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Devices.ElementAt(0).DeviceId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Devices.ElementAt(0).SensorType)
+        </th>
+    </tr>
+
+    @foreach (var device in Model.Devices)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => device.DeviceId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.SensorType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.ActionState)
+            </td>
+            <td>
+                @Html.ActionLink("Edycja", "EditDevice", new { id = device.DeviceId }) |
+                @Html.ActionLink("Usuń", "DeleteDevice", new { id = device.DeviceId }) |
+                @Html.ActionLink(device.ActionState.ToString(), "SwitchDevice", new { id = device.DeviceId })
+            </td>
+        </tr>
+    }
+
+</table>
+<p>
+    @Html.ActionLink("Powrót do adresów", "Index")
+</p>

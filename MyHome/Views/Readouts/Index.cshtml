@@ -1,0 +1,94 @@
+﻿@using System.Collections.Generic
+@model PagedList.IPagedList<MyHome.Models.ReadoutViewModel>
+@using PagedList.Mvc;
+@using MyHome.Controllers;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+@{
+    ViewBag.Title = "Odczyty";
+}
+
+<h2>Odczyty</h2>
+
+@using (Html.BeginForm("Index", "Readouts", FormMethod.Get, new { id = "ReadoutsForm" }))
+{
+    <input type="hidden" id="sortOrder" name="sortOrder" value='@ViewData["SortOrder"]' />
+
+    <p>
+        Filtr: @Html.TextBox("FilterString")
+        @Html.DropDownList("filterDropbox", ViewData["FilterList"] as List<SelectListItem>,
+                "<brak filtrowania>",
+                new { onchange = "document.getElementById('ReadoutsForm').submit();" }
+                )
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].DeviceId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].At)
+                <img src='@Url.Content("~/Content/Images/Down-Bold-16.png")' onclick="document.getElementById('sortOrder').value = 'asc';document.getElementById('ReadoutsForm').submit();"
+                     hidden='@ViewData["SortAscend"]' />
+                <!-- ^- this is not a mistake!!! hidden attr must be true if we want to show the other link -->
+                <img src='@Url.Content("~/Content/Images/Up-Bold-16.png")' onclick="document.getElementById('sortOrder').value = 'desc';document.getElementById('ReadoutsForm').submit();" hidden='@ViewData["SortDescend"]' />
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].ReadoutType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].ActionOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].AddressName)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeviceId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.At)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReadoutType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActionOn)
+                </td>
+                <td>
+                    @Html.ActionLink(item.AddressName, "GotoAddress", new { id = item.AddressId })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <!--
+    Strona @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+        -->
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }), @PagedListRenderOptions.OnlyShowFivePagesAtATime)
+
+    <p>
+        Pozycji na stronie:
+        @Html.DropDownList("pageSizeDropbox", ViewData["PageSizeList"] as List<SelectListItem>,
+                new { onchange = "document.getElementById('ReadoutsForm').submit();" }
+                )
+    </p>
+}

@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MyHome.Models.AddressViewModel>
+
+@{
+    ViewBag.Title = "Adresy";
+}
+
+<h2>Adresy</h2>
+
+<p>
+    @Html.ActionLink("Dodaj nowy", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FriendlyName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriendlyName)
+            </td>
+            <td>
+                @Html.ActionLink("Edycja", "Edit", new { id = item.AddressId }) |
+                @Html.ActionLink("Usuń", "Delete", new { id = item.AddressId }) |
+                @Html.ActionLink(String.Format("Urządzenia ({0})",item.Devices.Count), "Details", new { id = item.AddressId })
+            </td>
+        </tr>
+    }
+
+</table>

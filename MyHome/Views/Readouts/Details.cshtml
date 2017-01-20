@@ -1,0 +1,50 @@
+﻿@model MyHome.DataModel.Readout
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Readout</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.At)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.At)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReadoutType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReadoutType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActionOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActionOn)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

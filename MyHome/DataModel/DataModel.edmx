@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="DataModelStoreContainer">
+    <EntitySet Name="AddressSet" EntityType="DataModel.Store.AddressSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ReadoutSet" EntityType="DataModel.Store.ReadoutSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DeviceSet" EntityType="DataModel.Store.DeviceSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="OwnerGroupSet" EntityType="DataModel.Store.OwnerGroupSet" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="DeviceAddress" Association="DataModel.Store.DeviceAddress">
+      <End Role="Device" EntitySet="DeviceSet" />
+      <End Role="Address" EntitySet="AddressSet" />
+    </AssociationSet>
+    <AssociationSet Name="DeviceReadout" Association="DataModel.Store.DeviceReadout">
+      <End Role="Device" EntitySet="DeviceSet" />
+      <End Role="Readout" EntitySet="ReadoutSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerGroupAddress" Association="DataModel.Store.OwnerGroupAddress">
+      <End Role="OwnerGroup" EntitySet="OwnerGroupSet" />
+      <End Role="Address" EntitySet="AddressSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="AddressSet">
+    <Key>
+      <PropertyRef Name="AddressId" />
+    </Key>
+    <Property Name="AddressId" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="FriendlyName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Owner_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ReadoutSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="At" Type="datetime" Nullable="false" />
+    <Property Name="Value" Type="decimal" Nullable="false" Scale="3" />
+    <Property Name="ActionOn" Type="bit" Nullable="false" />
+    <Property Name="Device_DeviceId" Type="nvarchar" MaxLength="40" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeviceSet">
+    <Key>
+      <PropertyRef Name="DeviceId" />
+    </Key>
+    <Property Name="DeviceId" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="ActionState" Type="int" Nullable="false" />
+    <Property Name="SensorType" Type="int" Nullable="false" />
+    <Property Name="DeviceAddress_AddressId" Type="nvarchar" MaxLength="40" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OwnerGroupSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="DeviceAddress">
+    <End Role="Device" Type="DataModel.Store.DeviceSet" Multiplicity="*" />
+    <End Role="Address" Type="DataModel.Store.AddressSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AddressId" />
+      </Principal>
+      <Dependent Role="Device">
+        <PropertyRef Name="DeviceAddress_AddressId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DeviceReadout">
+    <End Role="Device" Type="DataModel.Store.DeviceSet" Multiplicity="1" />
+    <End Role="Readout" Type="DataModel.Store.ReadoutSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Device">
+        <PropertyRef Name="DeviceId" />
+      </Principal>
+      <Dependent Role="Readout">
+        <PropertyRef Name="Device_DeviceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OwnerGroupAddress">
+    <End Role="OwnerGroup" Type="DataModel.Store.OwnerGroupSet" Multiplicity="1" />
+    <End Role="Address" Type="DataModel.Store.AddressSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OwnerGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="Owner_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="DataModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AddressSet" EntityType="DataModel.Address" />
+          <EntitySet Name="ReadoutSet" EntityType="DataModel.Readout" />
+          <EntitySet Name="DeviceSet" EntityType="DataModel.Device" />
+          <AssociationSet Name="DeviceAddress" Association="DataModel.DeviceAddress">
+            <End Role="Device" EntitySet="DeviceSet" />
+            <End Role="Address" EntitySet="AddressSet" />
+          </AssociationSet>
+          <AssociationSet Name="DeviceReadout" Association="DataModel.DeviceReadout">
+            <End Role="Device" EntitySet="DeviceSet" />
+            <End Role="Readout" EntitySet="ReadoutSet" />
+          </AssociationSet>
+          <EntitySet Name="OwnerGroupSet" EntityType="DataModel.OwnerGroup" />
+          <AssociationSet Name="OwnerGroupAddress" Association="DataModel.OwnerGroupAddress">
+            <End Role="OwnerGroup" EntitySet="OwnerGroupSet" />
+            <End Role="Address" EntitySet="AddressSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="AddressId" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="40" />
+          <Property Name="FriendlyName" Type="String" Nullable="false" />
+          <NavigationProperty Name="Devices" Relationship="DataModel.DeviceAddress" FromRole="Address" ToRole="Device" />
+          <NavigationProperty Name="Owner" Relationship="DataModel.OwnerGroupAddress" FromRole="Address" ToRole="OwnerGroup" />
+        </EntityType>
+        <EntityType Name="Readout">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="At" Type="DateTime" Nullable="false" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Scale="3" />
+          <Property Name="ActionOn" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Device" Relationship="DataModel.DeviceReadout" FromRole="Readout" ToRole="Device" />
+        </EntityType>
+        <EnumType Name="ReadoutTypeEnum">
+          <Member Name="Temperature" Value="0" />
+        </EnumType>
+        <EntityType Name="Device">
+          <Key>
+            <PropertyRef Name="DeviceId" />
+          </Key>
+          <Property Name="DeviceId" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="40" />
+          <Property Name="ActionState" Type="DataModel.ActionStateEnum" Nullable="false" />
+          <NavigationProperty Name="DeviceAddress" Relationship="DataModel.DeviceAddress" FromRole="Device" ToRole="Address" />
+          <NavigationProperty Name="Readouts" Relationship="DataModel.DeviceReadout" FromRole="Device" ToRole="Readout" />
+          <Property Name="SensorType" Type="DataModel.SensorTypeEnum" Nullable="false" />
+        </EntityType>
+        <EnumType Name="ActionStateEnum">
+          <Member Name="Off" Value="0" />
+          <Member Name="On" Value="1" />
+        </EnumType>
+        <Association Name="DeviceAddress">
+          <End Type="DataModel.Device" Role="Device" Multiplicity="*" />
+          <End Type="DataModel.Address" Role="Address" Multiplicity="1" />
+        </Association>
+        <Association Name="DeviceReadout">
+          <End Type="DataModel.Device" Role="Device" Multiplicity="1" />
+          <End Type="DataModel.Readout" Role="Readout" Multiplicity="*" />
+        </Association>
+        <EntityType Name="OwnerGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="OwnedAddresses" Relationship="DataModel.OwnerGroupAddress" FromRole="OwnerGroup" ToRole="Address" />
+        </EntityType>
+        <Association Name="OwnerGroupAddress">
+          <End Type="DataModel.OwnerGroup" Role="OwnerGroup" Multiplicity="1" />
+          <End Type="DataModel.Address" Role="Address" Multiplicity="*" />
+        </Association>
+        <EnumType Name="SensorTypeEnum">
+          <Member Name="Temperature" Value="0" />
+          <Member Name="Humidity" Value="1" />
+        </EnumType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DataModelStoreContainer" CdmEntityContainer="DataModelContainer">
+    <EntitySetMapping Name="AddressSet">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Address)">
+        <MappingFragment StoreEntitySet="AddressSet">
+          <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+          <ScalarProperty Name="FriendlyName" ColumnName="FriendlyName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReadoutSet">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Readout)">
+        <MappingFragment StoreEntitySet="ReadoutSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="At" ColumnName="At" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="ActionOn" ColumnName="ActionOn" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DeviceSet">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Device)">
+        <MappingFragment StoreEntitySet="DeviceSet">
+          <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+          <ScalarProperty Name="ActionState" ColumnName="ActionState" />
+          <ScalarProperty Name="SensorType" ColumnName="SensorType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OwnerGroupSet">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.OwnerGroup)">
+        <MappingFragment StoreEntitySet="OwnerGroupSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="DeviceAddress" TypeName="DataModel.DeviceAddress" StoreEntitySet="DeviceSet">
+      <EndProperty Name="Address">
+        <ScalarProperty Name="AddressId" ColumnName="DeviceAddress_AddressId" />
+      </EndProperty>
+      <EndProperty Name="Device">
+        <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DeviceReadout" TypeName="DataModel.DeviceReadout" StoreEntitySet="ReadoutSet">
+      <EndProperty Name="Device">
+        <ScalarProperty Name="DeviceId" ColumnName="Device_DeviceId" />
+      </EndProperty>
+      <EndProperty Name="Readout">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OwnerGroupAddress" TypeName="DataModel.OwnerGroupAddress" StoreEntitySet="AddressSet">
+      <EndProperty Name="OwnerGroup">
+        <ScalarProperty Name="Id" ColumnName="Owner_Id" />
+      </EndProperty>
+      <EndProperty Name="Address">
+        <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
