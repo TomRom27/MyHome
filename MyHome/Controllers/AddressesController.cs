@@ -138,7 +138,7 @@ namespace MyHome.Controllers
         #region Device related
         public ActionResult CreateDevice(string addressId, string friendlyName)
         {
-            var device = new DeviceViewModel() { AddressId = addressId, AddressName = friendlyName};
+            var device = new DeviceViewModel() { AddressId = addressId, AddressName = friendlyName };
             ViewBag.AddressName = friendlyName;
             ViewBag.Error = "";
             return View(device);
@@ -156,12 +156,12 @@ namespace MyHome.Controllers
                 bool deviceExists = db.DeviceSet.Find(device.DeviceId) != null;
                 if (deviceExists)
                 {
-                    ViewBag.Error = "Takie urządzenie już istnieje, zmień Id";
+                    ModelState.AddModelError(nameof(device.DeviceId), "Takie urządzenie już istnieje, zmień Id");
                     return View(device);
                 }
 
-                // verify is address crorrect
-                // todo - user has access to address
+                // verify is address correct
+                // todo - check if user has access to address
                 var dbDevice = AutoMapper.Mapper.Map<Device>(device);
 
                 var dbAddress = db.AddressSet.Find(device.AddressId);
@@ -174,15 +174,16 @@ namespace MyHome.Controllers
             }
             else
             {
-                string s;
-                var errorState= ModelState.FirstOrDefault(ms => ms.Value.Errors.Count > 0);
+                string errorMsg;
+                var errorState = ModelState.FirstOrDefault(ms => ms.Value.Errors.Count > 0);
 
-                if (!String.IsNullOrEmpty(errorState.Key))
-                    s = errorState.Key + ": " + errorState.Value.Errors[0].ErrorMessage;
+                if (!string.IsNullOrEmpty(errorState.Key))
+                    errorMsg = errorState.Key + ": " + errorState.Value.Errors[0].ErrorMessage;
                 else
-                    s = "unknown field";
-                HandleErrorInfo info = new HandleErrorInfo(new Exception(s),"Addresses","CreateDevice");
-                return View("Error", info);
+                    errorMsg = errorState.Value.Errors[0].ErrorMessage;
+
+                ModelState.AddModelError("", errorMsg);
+                return View(device);
             }
         }
 

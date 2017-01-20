@@ -14,7 +14,6 @@
     <div class="form-horizontal">
         <h4>@Model.AddressName</h4>
         @Html.HiddenFor(model => model.AddressName) <!-- this way we preserve "read only" property on the model between POSTs -->
-        <h4  class="text-danger">@ViewBag.Error</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.AddressId)
@@ -51,7 +50,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Powrót do listy urządzeń", "Details", new { Model.AddressId })
 </div>
 
 @section Scripts {
