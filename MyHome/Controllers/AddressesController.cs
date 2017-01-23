@@ -212,7 +212,49 @@ namespace MyHome.Controllers
                 string addressId = device.DeviceAddress.AddressId;
                 db.DeviceSet.Remove(device);
                 db.SaveChanges();
-                return RedirectToAction("Details", new {id = addressId });
+                return RedirectToAction("Details", new { id = addressId });
+            }
+            else
+                return HttpNotFound();
+        }
+
+        public ActionResult SwitchDevice(string deviceId)
+        {
+            if (deviceId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Device device = db.DeviceSet.Find(deviceId);
+            if (device == null)
+            {
+                return HttpNotFound();
+            }
+            return View(AutoMapper.Mapper.Map<DeviceViewModel>(device));
+        }
+
+        [HttpPost, ActionName("SwitchDevice")]
+        [ValidateAntiForgeryToken]
+        public ActionResult SwitchDeviceConfirmed(string deviceId)
+        {
+            // todo - check user rights to the device
+            Device device = db.DeviceSet.Find(deviceId);
+            if (device != null)
+            {
+                switch (device.ActionState)
+                {
+                    case ActionStateEnum.On:
+                        {
+                            device.ActionState = ActionStateEnum.Off;
+                            break;
+                        }
+                    default:
+                        {
+                            device.ActionState = ActionStateEnum.On;
+                            break;
+                        }
+                }
+                db.SaveChanges();
+                return RedirectToAction("Details", new { id = device.DeviceAddress.AddressId });
             }
             else
                 return HttpNotFound();

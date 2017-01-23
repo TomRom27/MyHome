@@ -1,10 +1,17 @@
 ﻿@model MyHome.Models.DeviceViewModel
 
 @{
-    ViewBag.Title = "DeleteDevice";
+    ViewBag.Title = "SwitchDevice";
 }
 
-<h2>Usuwanie urządzenia</h2>
+@if (Model.IsOn)
+{
+    <h2>Wyłączanie urządzenia</h2>
+}
+else
+{
+    <h2>Włączanie urządzenia</h2>
+}
 
 <h3>@Model.DeviceId</h3>
 <div>
@@ -41,7 +48,14 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Usuń" class="btn btn-default" />
+            @if (Model.IsOn)
+            {
+                <input type="submit" value="Wyłącz" class="btn btn-default" />
+            }
+            else
+            {
+                <input type="submit" value="Włącz" class="btn btn-default" />
+            }
 
         </div>
     }

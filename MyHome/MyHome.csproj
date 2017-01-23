@@ -348,6 +348,7 @@
     <Content Include="Views\Addresses\Index.cshtml" />
     <Content Include="Views\Addresses\CreateDevice.cshtml" />
     <Content Include="Views\Addresses\DeleteDevice.cshtml" />
+    <Content Include="Views\Addresses\SwitchDevice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

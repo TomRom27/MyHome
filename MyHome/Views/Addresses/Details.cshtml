@@ -21,6 +21,11 @@
         <th>
             @Html.DisplayNameFor(model => model.Devices.ElementAt(0).SensorType)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Devices.ElementAt(0).IsOn)
+        </th>
+        <th>Odczyty</th>
+        <th></th>
     </tr>
 
     @foreach (var device in Model.Devices)
@@ -33,13 +38,17 @@
                 @Html.DisplayFor(modelItem => device.SensorType)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => device.ActionState)
+                @Html.DisplayFor(modelItem => device.IsOn)
+            </td>
+            <td>
+                @Html.ActionLink("Odczyty", "Index", "Readouts", new { sortOrder = "desc", filterDropbox = 1, FilterString = device.DeviceId }, null)
             </td>
             <td>
                 @Html.ActionLink("Edycja", "EditDevice", new { id = device.DeviceId }) |
                 @Html.ActionLink("Usuń", "DeleteDevice", new { deviceId = device.DeviceId }) |
-                @Html.ActionLink(device.ActionState.ToString(), "SwitchDevice", new { id = device.DeviceId })
+                @Html.ActionLink(device.IsOn ? "Wyłącz" : "Włącz", "SwitchDevice", new { deviceId = device.DeviceId })
             </td>
+
         </tr>
     }
 

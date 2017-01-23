@@ -30,12 +30,12 @@ namespace MyHome.Models
                 ;
 
             CreateMap<DataModel.Device, Models.DeviceViewModel>()
-                .ForMember(dest => dest.ActionState, m => m.MapFrom(src => src.ActionState == DataModel.ActionStateEnum.On))
+                .ForMember(dest => dest.IsOn, m => m.MapFrom(src => src.ActionState == DataModel.ActionStateEnum.On))
                 .ForMember(dest => dest.AddressId, m => m.MapFrom(src => src.DeviceAddress.AddressId))
                 ;
 
             CreateMap<Models.DeviceViewModel, DataModel.Device>()
-                .ForMember(dest => dest.ActionState, m => m.MapFrom(src =>  Convert.ToInt32( src.ActionState )))
+                .ForMember(dest => dest.ActionState, m => m.MapFrom(src =>  Convert.ToInt32( src.IsOn )))
                 ;
         }
     }

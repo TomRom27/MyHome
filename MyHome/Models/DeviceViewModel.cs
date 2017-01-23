@@ -15,7 +15,7 @@ namespace MyHome.Models
         public string DeviceId { get; set; }
 
         [Display(Name = "Pracuje")]
-        public bool ActionState { get; set; }
+        public bool IsOn { get; set; }
 
         [Display(Name = "Rodzaj")]
         public DataModel.SensorTypeEnum SensorType { get; set; }
