@@ -349,6 +349,8 @@
     <Content Include="Views\Addresses\CreateDevice.cshtml" />
     <Content Include="Views\Addresses\DeleteDevice.cshtml" />
     <Content Include="Views\Addresses\SwitchDevice.cshtml" />
+    <Content Include="Views\Shared\_DeviceInfo.cshtml" />
+    <Content Include="Views\Addresses\EditDevice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

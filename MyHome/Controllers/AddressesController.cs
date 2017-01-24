@@ -187,6 +187,62 @@ namespace MyHome.Controllers
             }
         }
 
+        public ActionResult EditDevice(string deviceId)
+        {
+            if (deviceId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Device dbDevice = db.DeviceSet.Find(deviceId);
+            if (dbDevice == null)
+            {
+                return HttpNotFound();
+            }
+            var device = AutoMapper.Mapper.Map<DeviceViewModel>(dbDevice);
+            return View(device);
+        }
+
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDevice(DeviceViewModel device)
+        {
+            // todo check user rights to address
+            if (ModelState.IsValid)
+            {
+                var dbDevice = db.DeviceSet.Find(device.DeviceId);
+                if (dbDevice == null)
+                    return HttpNotFound("Device not found by Id");
+
+                // todo - check if user has access to address
+
+                if (device.IsOn)
+                    dbDevice.ActionState = ActionStateEnum.On;
+                else
+                    dbDevice.ActionState = ActionStateEnum.Off;
+                dbDevice.SensorType = device.SensorType;
+
+                db.Entry(dbDevice).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", new { id = device.AddressId });
+            }
+            else
+            {
+                string errorMsg;
+                var errorState = ModelState.FirstOrDefault(ms => ms.Value.Errors.Count > 0);
+
+                if (!string.IsNullOrEmpty(errorState.Key))
+                    errorMsg = errorState.Key + ": " + errorState.Value.Errors[0].ErrorMessage;
+                else
+                    errorMsg = errorState.Value.Errors[0].ErrorMessage;
+
+                ModelState.AddModelError("", errorMsg);
+                return View(device);
+            }
+        }
+
+
         public ActionResult DeleteDevice(string deviceId)
         {
             if (deviceId == null)

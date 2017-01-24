@@ -16,32 +16,7 @@ else
 <h3>@Model.DeviceId</h3>
 <div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DeviceId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DeviceId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsOn)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsOn)
-        </dd>
-
-        <dt>
-            @Html.DisplayFor(model => model.SensorType)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SensorType)
-        </dd>
-
-    </dl>
+    @Html.Partial("_DeviceInfo", Model)
 
     @using (Html.BeginForm())
     {

@@ -11,7 +11,7 @@
     <hr />
 </div>
 <p>
-    @Html.ActionLink("Dodaj nowy", "CreateDevice", new { Model.AddressId, Model.FriendlyName})
+    @Html.ActionLink("Dodaj nowy", "CreateDevice", new { Model.AddressId, Model.FriendlyName })
 </p>
 <table class="table">
     <tr>
@@ -24,7 +24,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Devices.ElementAt(0).IsOn)
         </th>
-        <th>Odczyty</th>
+        <th></th>
         <th></th>
     </tr>
 
@@ -40,15 +40,16 @@
             <td>
                 @Html.DisplayFor(modelItem => device.IsOn)
             </td>
-            <td>
-                @Html.ActionLink("Odczyty", "Index", "Readouts", new { sortOrder = "desc", filterDropbox = 1, FilterString = device.DeviceId }, null)
-            </td>
-            <td>
-                @Html.ActionLink("Edycja", "EditDevice", new { id = device.DeviceId }) |
-                @Html.ActionLink("Usuń", "DeleteDevice", new { deviceId = device.DeviceId }) |
-                @Html.ActionLink(device.IsOn ? "Wyłącz" : "Włącz", "SwitchDevice", new { deviceId = device.DeviceId })
-            </td>
 
+            <td>
+                @Html.ActionLink("Edycja", "EditDevice", new { deviceId = device.DeviceId }) |
+                @Html.ActionLink("Usuń", "DeleteDevice", new { deviceId = device.DeviceId })
+            </td>
+            <td>
+                @Html.ActionLink("Zobacz odczyty", "Index", "Readouts", new { sortOrder = "desc", filterDropbox = 1, FilterString = device.DeviceId }, null) |
+                @Html.ActionLink((device.IsOn ? "Wyłącz" : "Włącz") + " urządzenie", "SwitchDevice"  , new { deviceId = device.DeviceId })
+
+            </td>
         </tr>
     }
 
