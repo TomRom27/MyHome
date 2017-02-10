@@ -56,6 +56,12 @@ namespace MyHome.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.AddressSet.Find(address.AddressId) != null)
+                {
+                    ModelState.AddModelError(nameof(address.AddressId), "Taki adres już istnieje, zmień Id");
+                    return View(address);
+                }
+
                 var dbAddress = AutoMapper.Mapper.Map<Address>(address);
 
                 var defaultOwner = db.OwnerGroupSet.Find(Properties.Settings.Default.OwnerGroupIdDefault);
@@ -76,12 +82,12 @@ namespace MyHome.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Address address = db.AddressSet.Find(id);
-            if (address == null)
+            Address dbAddress = db.AddressSet.Find(id);
+            if (dbAddress == null)
             {
                 return HttpNotFound();
             }
-            return View(address);
+            return View(AutoMapper.Mapper.Map<AddressViewModel>( dbAddress));
         }
 
         // POST: Addresses/Edit/5
@@ -89,11 +95,18 @@ namespace MyHome.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AddressId,FriendlyName")] Address address)
+        public ActionResult Edit([Bind(Include = "AddressId,FriendlyName")] AddressViewModel address)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(address).State = EntityState.Modified;
+                var dbAddress = db.AddressSet.Find(address.AddressId);
+                if (dbAddress == null)
+                {
+                    return HttpNotFound();
+                }
+
+                dbAddress.FriendlyName = address.FriendlyName;
+                db.Entry(dbAddress).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

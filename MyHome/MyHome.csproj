@@ -200,6 +200,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReadoutsController.cs" />
+    <Compile Include="Controllers\v1\PingController.cs" />
     <Compile Include="Controllers\v1\TemperatureController.cs" />
     <Compile Include="DataModel\ActionStateEnum.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
@@ -355,6 +356,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
+    <Folder Include="Views\Ping\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
