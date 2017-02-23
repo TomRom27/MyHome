@@ -21,6 +21,9 @@ namespace MyHome.Controllers
         public ActionResult Index()
         {
             var list = db.AddressSet.ToList().Select((a) => AutoMapper.Mapper.Map<AddressViewModel>(a)).ToList();
+
+            ViewBag.IsMobile = Request.Browser.IsMobileDevice;
+
             return View(list);
         }
 
@@ -37,6 +40,7 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+
 
             var viewModel = AutoMapper.Mapper.Map<AddressViewModel>(address);
             return View(viewModel);
