@@ -1,0 +1,35 @@
+﻿@model MyHome.Models.AddressViewModel
+@{
+    ViewBag.Title = "DetailsMobile";
+}
+
+<h2>Urządzenia</h2>
+<div>
+    <h4>@Html.DisplayFor(model => model.FriendlyName)</h4>
+    <hr />
+</div>
+
+<ul data-role="listview" data-inset="true">
+    @foreach (var device in Model.Devices)
+    {
+        <li>
+            <a href="@Url.Action("Index", "Readouts", new { sortOrder = "desc", filterDropbox = 1, FilterString = device.DeviceId }) ">
+                <h4>@device.DeviceId</h4>
+            </a>
+            <p>
+                @(device.Last != null ? device.Last.At.ToString("HH:mm:ss d MMM yyyy") : "")
+                <strong>@(device.Last != null ? " " + device.Last.Value.ToString() : "")</strong>
+            </p>
+            <p>
+                <button type="button" class="btn btn-primary"
+                        onclick="location.href='@Url.Action("SwitchDevice", new { deviceId = device.DeviceId })'">
+                    @(device.IsOn ? "Wyłącz" : "Włącz")
+                </button>
+            </p>
+        </li>
+    }
+</ul>
+<p>
+    @Html.ActionLink("Powrót do adresów", "Index")
+</p>
+

@@ -32,6 +32,7 @@ namespace MyHome.Models
             CreateMap<DataModel.Device, Models.DeviceViewModel>()
                 .ForMember(dest => dest.IsOn, m => m.MapFrom(src => src.ActionState == DataModel.ActionStateEnum.On))
                 .ForMember(dest => dest.AddressId, m => m.MapFrom(src => src.DeviceAddress.AddressId))
+                .ForMember(dest => dest.Last, m => m.MapFrom(src => src.Readouts.LastOrDefault()))
                 ;
 
             CreateMap<Models.DeviceViewModel, DataModel.Device>()

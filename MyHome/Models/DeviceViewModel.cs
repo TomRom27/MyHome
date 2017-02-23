@@ -20,6 +20,8 @@ namespace MyHome.Models
         [Display(Name = "Rodzaj")]
         public DataModel.SensorTypeEnum SensorType { get; set; }
 
+        public ReadoutViewModel Last { get; set; }
+
         public string Error { get; set; }
     }
 }

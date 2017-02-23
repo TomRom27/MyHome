@@ -38,7 +38,8 @@ namespace MyHome.Controllers
                 return HttpNotFound();
             }
 
-            return View(AutoMapper.Mapper.Map<AddressViewModel>(address));
+            var viewModel = AutoMapper.Mapper.Map<AddressViewModel>(address);
+            return View(viewModel);
         }
 
         // GET: Addresses/Create
