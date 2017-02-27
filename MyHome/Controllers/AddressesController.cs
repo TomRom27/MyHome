@@ -125,12 +125,12 @@ namespace MyHome.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Address address = db.AddressSet.Find(id);
-            if (address == null)
+            Address dbAddress = db.AddressSet.Find(id);
+            if (dbAddress == null)
             {
                 return HttpNotFound();
             }
-            return View(address);
+            return View(AutoMapper.Mapper.Map<AddressViewModel>(dbAddress));
         }
 
         // POST: Addresses/Delete/5
