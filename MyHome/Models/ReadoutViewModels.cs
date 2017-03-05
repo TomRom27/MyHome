@@ -23,6 +23,9 @@ namespace MyHome.Models
         [Display(Name = "Pracuje")]
         public bool ActionOn { get; set; }
 
+        [Display(Name ="Uwagi")]
+        public string Comment { get; set; }
+
         [Display(Name = "Identyfikator urządzenia")]
         public string DeviceId { get; set; }
 

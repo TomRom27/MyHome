@@ -29,7 +29,5 @@ namespace MyHome.DataModel
         public virtual DbSet<Readout> ReadoutSet { get; set; }
         public virtual DbSet<Device> DeviceSet { get; set; }
         public virtual DbSet<OwnerGroup> OwnerGroupSet { get; set; }
-
-        public System.Data.Entity.DbSet<MyHome.Models.DeviceViewModel> DeviceViewModels { get; set; }
     }
 }

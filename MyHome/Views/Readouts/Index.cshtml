@@ -50,7 +50,9 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].AddressName)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Comment)
+            </th>
         </tr>
 
         @foreach (var item in Model)
@@ -73,6 +75,9 @@
                 </td>
                 <td>
                     @Html.ActionLink(item.AddressName, "GotoAddress", new { id = item.AddressId })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
                 </td>
             </tr>
         }

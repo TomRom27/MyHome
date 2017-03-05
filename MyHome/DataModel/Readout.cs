@@ -18,6 +18,7 @@ namespace MyHome.DataModel
         public System.DateTime At { get; set; }
         public decimal Value { get; set; }
         public bool ActionOn { get; set; }
+        public string Comment { get; set; }
     
         public virtual Device Device { get; set; }
     }
