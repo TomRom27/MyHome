@@ -52,7 +52,7 @@ namespace MyHome.Controllers.v1
                 return StatusCode(HttpStatusCode.NotFound);
 
             Readout readout = new Readout() { ActionOn = device.ActionState == ActionStateEnum.On, Value = model.Value,
-                            At = DateTime.Now, Device = device};
+                            At = DateTime.Now, Device = device, Comment = model.Comment};
             db.ReadoutSet.Add(readout);
             db.SaveChanges();
 

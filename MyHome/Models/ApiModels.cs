@@ -12,6 +12,7 @@ namespace MyHome.Models
         public DateTime? At;
         public string DeviceId;
         public decimal Value;
+        public string Comment;
     }
 
 }
