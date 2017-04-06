@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyHome", "MyHome\MyHome.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrUtil", "TrUtil\TrUtil.csproj", "{50D59568-EC98-4C18-BDA0-B4DF457FE0B6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FFC84227-F821-48D5-B609-B49C5417C64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "Tests\UnitTestProject\UnitTestProject.csproj", "{91D98A56-CAA0-428B-87EC-D3DA67BF40C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{50D59568-EC98-4C18-BDA0-B4DF457FE0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D59568-EC98-4C18-BDA0-B4DF457FE0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D59568-EC98-4C18-BDA0-B4DF457FE0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D98A56-CAA0-428B-87EC-D3DA67BF40C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D98A56-CAA0-428B-87EC-D3DA67BF40C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D98A56-CAA0-428B-87EC-D3DA67BF40C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D98A56-CAA0-428B-87EC-D3DA67BF40C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91D98A56-CAA0-428B-87EC-D3DA67BF40C6} = {FFC84227-F821-48D5-B609-B49C5417C64A}
 	EndGlobalSection
 EndGlobal

@@ -8,6 +8,7 @@ using AutoMapper;
 using PagedList;
 
 using MyHome.DataModel;
+using MyHome.Models;
 
 namespace MyHome.Controllers
 {
@@ -147,6 +148,19 @@ namespace MyHome.Controllers
                     {
                         query = from r in db.ReadoutSet where r.Device.DeviceAddress.FriendlyName.Contains(filterString) select r;
                         break;
+                    }
+                case ByDate:
+                    {
+                        // here we unfortunatelly can't select by db, so we get all and filter in the code
+                        query = from r in db.ReadoutSet select r;
+                        List<Readout> list;
+                        if (sortOrderAscending)
+                            list = query.OrderBy(r => r.At).ToList();
+                        else
+                            list = query.OrderByDescending(r => r.At).ToList();
+
+                        return list.FindAll((r) => r.At.MatchesReadoutDatePattern(filterString));
+                        
                     }
                 default:
                     {
