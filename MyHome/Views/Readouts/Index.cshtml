@@ -18,7 +18,8 @@
     <input type="hidden" id="sortOrder" name="sortOrder" value='@ViewData["SortOrder"]' />
 
     <p>
-        Filtr: @Html.TextBox("FilterString", "", new { Title = MyHome.Models.ReadoutViewModel.ReadoutDateTimeFormat } )
+        Filtr: @Html.TextBox("FilterString", "", new { Title = MyHome.Models.ReadoutViewModel.ReadoutDateTimeFormat+
+              "\n"+ MyHome.Models.ReadoutViewModel.ReadoutDateFormat+";"+MyHome.Models.ReadoutViewModel.ReadoutDateFormat} )
         @Html.DropDownList("filterDropbox", ViewData["FilterList"] as List<SelectListItem>,
                 "<brak filtrowania>",
                 new { onchange = "document.getElementById('ReadoutsForm').submit();" }

@@ -131,7 +131,6 @@ namespace MyHome.Controllers
                         query = from r in db.ReadoutSet where r.Device.DeviceId.Contains(filterString) select r;
                         break;
                     }
-                //case ByDate
                 case ByType:
                     {
                         query = from r in db.ReadoutSet where r.Device.SensorType.ToString().Contains(filterString) select r;
@@ -151,15 +150,42 @@ namespace MyHome.Controllers
                     }
                 case ByDate:
                     {
-                        // here we unfortunatelly can't select by db, so we get all and filter in the code
-                        query = from r in db.ReadoutSet select r;
-                        List<Readout> list;
-                        if (sortOrderAscending)
-                            list = query.OrderBy(r => r.At).ToList();
-                        else
-                            list = query.OrderByDescending(r => r.At).ToList();
+                        int semicolonPos = filterString.IndexOf(";");
+                        if (semicolonPos >= 0)
+                        {
 
-                        return list.FindAll((r) => r.At.MatchesReadoutDatePattern(filterString));
+                            // search by from, to
+                            DateTime dateFrom, dateTo;
+
+                            // if date conversion fails, we assiged "empty" date
+                            if (!DateTime.TryParseExact(filterString.Substring(0, semicolonPos), ReadoutViewModel.ReadoutDateFormat, null, System.Globalization.DateTimeStyles.None, out dateFrom))
+                                dateFrom = DateTime.MinValue;
+
+                            if (!DateTime.TryParseExact(filterString.Substring(semicolonPos+1), ReadoutViewModel.ReadoutDateFormat, null, System.Globalization.DateTimeStyles.None, out dateTo))
+                                dateTo = DateTime.MinValue;
+                            else
+                            {
+                                // in case of dateTo, time part must be the last second of the day like dd.MM.yyyy 23:59:59 
+                                // so that dateTo is always bigger if comparing readout from this day
+                                dateTo = dateTo.AddDays(1).AddSeconds(-1);
+                            }
+
+                            query = from r in db.ReadoutSet where (r.At.CompareTo(dateFrom)>=0 && r.At.CompareTo(dateTo) <= 0) select r;
+                            break;
+                        }
+                        else
+                        {
+                            // search by date/time filtering
+                            // here we unfortunatelly can't select by db, so we get all and filter in the code
+                            query = from r in db.ReadoutSet select r;
+                            List<Readout> list;
+                            if (sortOrderAscending)
+                                list = query.OrderBy(r => r.At).ToList();
+                            else
+                                list = query.OrderByDescending(r => r.At).ToList();
+
+                            return list.FindAll((r) => r.At.MatchesReadoutDatePattern(filterString));
+                        }
                         
                     }
                 default:

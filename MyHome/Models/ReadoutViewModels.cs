@@ -10,6 +10,7 @@ namespace MyHome.Models
     {
 
         public const string ReadoutDateTimeFormat = "dd.MM.yyyy HH:mm";
+        public const string ReadoutDateFormat = "dd.MM.yyyy";
         public int Id { get; set; }
 
         [Display(Name = "Czas")]
