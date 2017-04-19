@@ -142,7 +142,6 @@ namespace MyHome.Controllers
                         query = from r in db.ReadoutSet where r.ActionOn == b select r;
                         break;
                     }
-                // todo 
                 case ByAddress:
                     {
                         query = from r in db.ReadoutSet where r.Device.DeviceAddress.FriendlyName.Contains(filterString) select r;
@@ -153,7 +152,6 @@ namespace MyHome.Controllers
                         int semicolonPos = filterString.IndexOf(";");
                         if (semicolonPos >= 0)
                         {
-
                             // search by from, to
                             DateTime dateFrom, dateTo;
 
@@ -166,7 +164,7 @@ namespace MyHome.Controllers
                             else
                             {
                                 // in case of dateTo, time part must be the last second of the day like dd.MM.yyyy 23:59:59 
-                                // so that dateTo is always bigger if comparing readout from this day
+                                // so that dateTo is always bigger if comparing readout from the same day
                                 dateTo = dateTo.AddDays(1).AddSeconds(-1);
                             }
 
