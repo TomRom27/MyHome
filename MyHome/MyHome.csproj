@@ -354,6 +354,7 @@
     <Content Include="Views\Shared\_DeviceInfo.cshtml" />
     <Content Include="Views\Addresses\EditDevice.cshtml" />
     <Content Include="Views\Addresses\Details.Mobile.cshtml" />
+    <Content Include="Views\Readouts\Index.Mobile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
