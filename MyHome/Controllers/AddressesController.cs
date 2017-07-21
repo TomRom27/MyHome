@@ -11,6 +11,7 @@ using MyHome.Models;
 
 namespace MyHome.Controllers
 {
+    [Authorize]
     public class AddressesController : Controller
     {
         public const string ClassName = "Addresses";

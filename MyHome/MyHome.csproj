@@ -197,11 +197,13 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Commons.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReadoutsController.cs" />
     <Compile Include="Controllers\v1\PingController.cs" />
     <Compile Include="Controllers\v1\TemperatureController.cs" />
+    <Compile Include="Custom\AuthorizeAtribute.cs" />
     <Compile Include="DataModel\ActionStateEnum.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>

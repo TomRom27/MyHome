@@ -12,7 +12,7 @@ using MyHome.Models;
 
 namespace MyHome.Controllers
 {
-
+    [Authorize]
     public class ReadoutsController : Controller
     {
         public static List<SelectListItem> FilterList = CreateFilterList();
