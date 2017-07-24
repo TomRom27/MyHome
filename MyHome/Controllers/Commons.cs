@@ -9,7 +9,7 @@ namespace MyHome.Controllers
     {
         public const string HomeControllerName = "Addresses";
         public const string DefaultUserRole = "User";
-        public const string SuperUserRole = "SuperUser";
+        public const string SuperUserRole = "Super User";
 
     }
 }
