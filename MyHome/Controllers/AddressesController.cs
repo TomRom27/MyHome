@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MyHome.DataModel;
 using MyHome.Models;
+using System.Security.Claims;
 
 namespace MyHome.Controllers
 {
@@ -21,11 +22,19 @@ namespace MyHome.Controllers
         // GET: Addresses
         public ActionResult Index()
         {
-            var list = db.AddressSet.ToList().Select((a) => AutoMapper.Mapper.Map<AddressViewModel>(a)).ToList();
+            var userGroup = User.Identity.IsAuthenticated ? (User.Identity as ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value : "";
+            var isSuperUser = User.IsInRole(Commons.SuperUserRole);
+            var list = db.AddressSet.Where((a) => isSuperUser || a.Owner.Name.Equals(userGroup)).ToList().Select((a) => AutoMapper.Mapper.Map<AddressViewModel>(a)).ToList();
 
             ViewBag.IsMobile = Request.Browser.IsMobileDevice;
 
             return View(list);
+        }
+
+        private bool UserAuthorizedTo(Address address)
+        {
+            var userGroup = User.Identity.IsAuthenticated ? (User.Identity as ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value : "";
+            return (User.IsInRole(Commons.SuperUserRole) || address.Owner.Name.Equals(userGroup));
         }
 
         public const string DetailsAction = "Details";
@@ -41,7 +50,10 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (!UserAuthorizedTo(address))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
 
             var viewModel = AutoMapper.Mapper.Map<AddressViewModel>(address);
             return View(viewModel);
@@ -70,7 +82,7 @@ namespace MyHome.Controllers
 
                 var dbAddress = AutoMapper.Mapper.Map<Address>(address);
 
-                var defaultOwner = db.OwnerGroupSet.Find(Properties.Settings.Default.OwnerGroupIdDefault);
+                var defaultOwner = db.OwnerGroupSet.Find(Properties.Settings.Default.OwnerGroupIdDefault); // todo
                 dbAddress.Owner = defaultOwner;
 
                 db.AddressSet.Add(dbAddress);
@@ -93,6 +105,11 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+            if (!UserAuthorizedTo(dbAddress))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
             return View(AutoMapper.Mapper.Map<AddressViewModel>( dbAddress));
         }
 
@@ -109,6 +126,11 @@ namespace MyHome.Controllers
                 if (dbAddress == null)
                 {
                     return HttpNotFound();
+                }
+
+                if (!UserAuthorizedTo(dbAddress))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
                 }
 
                 dbAddress.FriendlyName = address.FriendlyName;
@@ -131,6 +153,11 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+            if (!UserAuthorizedTo(dbAddress))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
             return View(AutoMapper.Mapper.Map<AddressViewModel>(dbAddress));
         }
 
@@ -140,6 +167,12 @@ namespace MyHome.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             Address address = db.AddressSet.Find(id);
+
+            if (!UserAuthorizedTo(address))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
             db.AddressSet.Remove(address);
             db.SaveChanges();
             return RedirectToAction("Index");
