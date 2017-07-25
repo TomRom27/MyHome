@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace MyHome.Models
 {
     public class ExternalLoginConfirmationViewModel
@@ -79,6 +80,13 @@ namespace MyHome.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "User group")]
+        [StringLength(100, ErrorMessage = "Group can't be empty")]
+        public string UserGroup { get; set; }
+
+        public IEnumerable<System.Web.Mvc.SelectListItem> UserGroups { get; set; }
     }
 
     public class ResetPasswordViewModel

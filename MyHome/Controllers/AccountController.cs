@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyHome.Models;
+using MyHome.DataModel;
 
 namespace MyHome.Controllers
 {
@@ -52,6 +53,18 @@ namespace MyHome.Controllers
             }
         }
 
+        private DataModelContainer modelContainer;
+        public DataModelContainer ModelContainer
+        {
+            get
+            {
+                if (modelContainer == null)
+                {
+                    modelContainer = new DataModelContainer();
+                }
+                return modelContainer;
+            }
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -92,54 +105,19 @@ namespace MyHome.Controllers
         }
 
         //
-        // GET: /Account/VerifyCode
-        [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        {
-            // Require that the user has already logged in via username/password or external login
-            if (!await SignInManager.HasBeenVerifiedAsync())
-            {
-                return View("Error");
-            }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        }
-
-        //
-        // POST: /Account/VerifyCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid code.");
-                    return View(model);
-            }
-        }
-
-        //
         // GET: /Account/Register
         [Authorize(Roles = Commons.SuperUserRole)]
         public ActionResult Register()
         {
-            return View();
+
+            RegisterViewModel model = new RegisterViewModel();
+            model.UserGroups = GetUserGroupList();
+            return View(model);
+        }
+
+        private List<SelectListItem> GetUserGroupList()
+        {
+            return ModelContainer.OwnerGroupSet.ToList().Select((o) => new SelectListItem() { Text = o.Name, Value = o.Name, }).ToList();
         }
 
         //
@@ -152,9 +130,11 @@ namespace MyHome.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                user.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole() { RoleId = Commons.DefaultUserRole, UserId = user.Id }); // T.R. adding a default role
+                user.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole() { RoleId = Commons.DefaultUserRoleId, UserId = user.Id }); // T.R. adding a default role
+                user.Claims.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim() { ClaimType = Commons.ClaimUserGroup, ClaimValue = model.UserGroup, UserId = user.Id });
 
                 var result = await UserManager.CreateAsync(user, model.Password);
+
 
                 if (result.Succeeded)
                 {
@@ -173,6 +153,7 @@ namespace MyHome.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            model.UserGroups = GetUserGroupList();
             return View(model);
         }
 
