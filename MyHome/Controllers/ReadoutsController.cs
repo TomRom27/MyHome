@@ -37,7 +37,10 @@ namespace MyHome.Controllers
             bool sortOrderAscending = HandleSortOrder(sortOrder);
             var dataList = GetFilteredReadouts(filterDropbox, filterString, sortOrderAscending);
 
-            var vmList = dataList.Select(d => Mapper.Map<Models.ReadoutViewModel>(d));
+            var currentUserGroup = User.Identity.IsAuthenticated ? (User.Identity as System.Security.Claims.ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value : "";
+            var isSuperUser = User.IsInRole(Commons.SuperUserRole);
+
+            var vmList = dataList.Where((r) => isSuperUser || r.Device.DeviceAddress.Owner.Name.Equals(currentUserGroup)).Select(d => Mapper.Map<Models.ReadoutViewModel>(d));
 
             // restore filter dropbox state  
             foreach (var l in FilterList)
