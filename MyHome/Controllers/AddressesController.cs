@@ -22,9 +22,9 @@ namespace MyHome.Controllers
         // GET: Addresses
         public ActionResult Index()
         {
-            var userGroup = User.Identity.IsAuthenticated ? (User.Identity as ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value : "";
+            var currentUserGroup = User.Identity.IsAuthenticated ? (User.Identity as ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value : "";
             var isSuperUser = User.IsInRole(Commons.SuperUserRole);
-            var list = db.AddressSet.Where((a) => isSuperUser || a.Owner.Name.Equals(userGroup)).ToList().Select((a) => AutoMapper.Mapper.Map<AddressViewModel>(a)).ToList();
+            var list = db.AddressSet.Where((a) => isSuperUser || a.Owner.Name.Equals(currentUserGroup)).ToList().Select((a) => AutoMapper.Mapper.Map<AddressViewModel>(a)).ToList();
 
             ViewBag.IsMobile = Request.Browser.IsMobileDevice;
 
@@ -52,7 +52,7 @@ namespace MyHome.Controllers
             }
             if (!UserAuthorizedTo(address))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
             var viewModel = AutoMapper.Mapper.Map<AddressViewModel>(address);
@@ -80,9 +80,16 @@ namespace MyHome.Controllers
                     return View(address);
                 }
 
-                var dbAddress = AutoMapper.Mapper.Map<Address>(address);
 
-                var defaultOwner = db.OwnerGroupSet.Find(Properties.Settings.Default.OwnerGroupIdDefault); // todo
+                var currentUserGroup = User.Identity.IsAuthenticated ? (User.Identity as ClaimsIdentity).FindFirst(Commons.ClaimUserGroup).Value :
+                                                                    "&"; // we use & as a group name which never exists so in result nothing is found in db;
+                var defaultOwner = db.OwnerGroupSet.Where((g) => g.Name.Equals( currentUserGroup)).SingleOrDefault();
+                if (defaultOwner == null)
+                {
+                    throw new Exception("Can't figure out which user group to use for new address, address can't be added");
+                } 
+
+                var dbAddress = AutoMapper.Mapper.Map<Address>(address);
                 dbAddress.Owner = defaultOwner;
 
                 db.AddressSet.Add(dbAddress);
@@ -107,7 +114,7 @@ namespace MyHome.Controllers
             }
             if (!UserAuthorizedTo(dbAddress))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
             return View(AutoMapper.Mapper.Map<AddressViewModel>( dbAddress));
@@ -155,7 +162,7 @@ namespace MyHome.Controllers
             }
             if (!UserAuthorizedTo(dbAddress))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
             return View(AutoMapper.Mapper.Map<AddressViewModel>(dbAddress));
@@ -170,7 +177,7 @@ namespace MyHome.Controllers
 
             if (!UserAuthorizedTo(address))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
             db.AddressSet.Remove(address);
@@ -219,6 +226,10 @@ namespace MyHome.Controllers
                 var dbAddress = db.AddressSet.Find(device.AddressId);
                 if (dbAddress == null)
                     return HttpNotFound("Address not found by Id");
+                if (!UserAuthorizedTo(dbAddress))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
 
                 dbAddress.Devices.Add(dbDevice);
                 db.SaveChanges();
@@ -250,6 +261,10 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+            if (!UserAuthorizedTo(dbDevice.DeviceAddress))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
             var device = AutoMapper.Mapper.Map<DeviceViewModel>(dbDevice);
             return View(device);
         }
@@ -266,6 +281,10 @@ namespace MyHome.Controllers
                 var dbDevice = db.DeviceSet.Find(device.DeviceId);
                 if (dbDevice == null)
                     return HttpNotFound("Device not found by Id");
+                if (!UserAuthorizedTo(dbDevice.DeviceAddress))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
 
                 // todo - check if user has access to address
 
@@ -306,6 +325,10 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+            if (!UserAuthorizedTo(device.DeviceAddress))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
             return View(AutoMapper.Mapper.Map<DeviceViewModel>(device));
         }
 
@@ -317,6 +340,11 @@ namespace MyHome.Controllers
             Device device = db.DeviceSet.Find(deviceId);
             if (device != null)
             {
+                if (!UserAuthorizedTo(device.DeviceAddress))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
                 string addressId = device.DeviceAddress.AddressId;
                 db.DeviceSet.Remove(device);
                 db.SaveChanges();
@@ -337,6 +365,11 @@ namespace MyHome.Controllers
             {
                 return HttpNotFound();
             }
+            if (!UserAuthorizedTo(device.DeviceAddress))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             return View(AutoMapper.Mapper.Map<DeviceViewModel>(device));
         }
 
@@ -348,6 +381,11 @@ namespace MyHome.Controllers
             Device device = db.DeviceSet.Find(deviceId);
             if (device != null)
             {
+                if (!UserAuthorizedTo(device.DeviceAddress))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
                 switch (device.ActionState)
                 {
                     case ActionStateEnum.On:
