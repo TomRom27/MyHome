@@ -12,14 +12,27 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using MyHome.Models;
 
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
 namespace MyHome
 {
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var apiKeyConnection = System.Configuration.ConfigurationManager.ConnectionStrings["SGKey"];
+            var client = new SendGridClient(apiKeyConnection.ConnectionString);
+
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("tomek@myhometr.com", "Tomek z MyHome TR"),
+                Subject = message.Subject,
+                HtmlContent = message.Body
+            };
+            msg.AddTo(new EmailAddress(message.Destination));
+
+            return client.SendEmailAsync(msg);
         }
     }
 
