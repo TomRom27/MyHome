@@ -21,8 +21,14 @@ namespace MyHome
     {
         public Task SendAsync(IdentityMessage message)
         {
+            string sgKey = "";
             var apiKeyConnection = System.Configuration.ConfigurationManager.ConnectionStrings["SGKey"];
-            var client = new SendGridClient(apiKeyConnection.ConnectionString);
+            if ((apiKeyConnection != null) && !String.IsNullOrEmpty(apiKeyConnection.ConnectionString))
+                sgKey = apiKeyConnection.ConnectionString;
+            else
+                sgKey = Environment.GetEnvironmentVariable("SG_KEY", EnvironmentVariableTarget.Machine);
+            
+            var client = new SendGridClient(sgKey);
 
             var msg = new SendGridMessage()
             {
